@@ -15,58 +15,139 @@
   <link rel="canonical" href="https://www.picuino.com/neumatic/index.html">
 
   <style>
-  body {
-    margin: 0;
-    padding-top: 35px;
-    font-family: sans-serif;
-    font-size: 14px;
+  :root {
+    --color-bg: #f0f2f5;
+    --color-surface: #ffffff;
+    --color-border: #e0e0e0;
+    --color-border-strong: #c0c0c0;
+    --color-text: #1a1a2e;
+    --color-text-secondary: #6b7280;
+    --color-text-muted: #9ca3af;
+    --color-primary: #2563eb;
+    --color-primary-hover: #1d4ed8;
+    --color-primary-light: #eff6ff;
+    --color-accent: #e06000;
+    --color-success: #16a34a;
+    --color-danger: #dc2626;
+    --color-canvas-bg: #fafafa;
+    --font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    --font-size-xs: 11px;
+    --font-size-sm: 12px;
+    --font-size-base: 13px;
+    --font-size-lg: 15px;
+    --space-xs: 4px;
+    --space-sm: 6px;
+    --space-md: 10px;
+    --space-lg: 16px;
+    --space-xl: 24px;
+    --menu-height: 36px;
+    --sidebar-width: 180px;
+    --toolbar-width: 44px;
+    --statusbar-height: 26px;
+    --radius-sm: 4px;
+    --radius-md: 6px;
+    --radius-lg: 8px;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.12);
+    --shadow-lg: 0 10px 25px rgba(0,0,0,0.18);
   }
 
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: var(--font-family);
+    font-size: var(--font-size-base);
+    color: var(--color-text);
+    background: var(--color-bg);
+    overflow: hidden;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ===== MENU BAR ===== */
   .menu {
-    position: fixed;
+    position: relative;
     top: 0;
     left: 0;
     width: 100%;
-    background: white;
-    border-bottom: 1px solid #000;
+    height: var(--menu-height);
+    background: var(--color-surface);
+    border-bottom: 1px solid var(--color-border);
     z-index: 1000;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+  }
+
+  .menu-brand {
+    font-weight: 600;
+    font-size: var(--font-size-lg);
+    color: var(--color-text);
+    padding: 0 var(--space-lg);
+    white-space: nowrap;
+    user-select: none;
+    letter-spacing: -0.3px;
+  }
+
+  .menu-brand span {
+    color: var(--color-primary);
   }
 
   .menu-principal {
     list-style: none;
     margin: 0;
-    padding: 0 0;
+    padding: 0;
     display: flex;
+    height: 100%;
+    align-items: center;
   }
 
   .menu-item {
     position: relative;
+    height: 100%;
+    display: flex;
+    align-items: center;
   }
 
   .menu-titulo {
-    padding: 8px 8px;
+    padding: 0 var(--space-md);
     cursor: pointer;
     user-select: none;
-    font-weight: bold;
+    font-weight: 500;
+    font-size: var(--font-size-base);
+    color: var(--color-text-secondary);
+    height: 100%;
     display: flex;
+    align-items: center;
+    transition: color 0.15s, background 0.15s;
+    border-radius: var(--radius-sm);
   }
 
-  /* Submenú */
+  .menu-titulo:hover {
+    color: var(--color-text);
+    background: var(--color-bg);
+  }
+
+  /* Submenus */
   .submenu {
     list-style: none;
     margin: 0;
-    padding: 0;
-
+    padding: var(--space-xs) 0;
     position: absolute;
     top: 100%;
     left: 0;
-
     width: fit-content;
+    min-width: 180px;
     white-space: nowrap;
-    background: white;
-    border: 1px solid #ccc;
-
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
     display: none;
+    z-index: 1001;
   }
 
   .submenu li {
@@ -74,20 +155,24 @@
   }
 
   .submenu .submenu {
-    top: 0;
+    top: -4px;
     left: 100%;
   }
 
   .submenu li a {
     white-space: nowrap;
     display: block;
-    padding: 10px;
+    padding: var(--space-sm) var(--space-lg);
     text-decoration: none;
-    color: #333;
+    color: var(--color-text);
+    font-size: var(--font-size-base);
+    transition: background 0.1s;
+    border-radius: 0;
   }
 
   .submenu li a:hover {
-    background: #f0f0f0;
+    background: var(--color-primary-light);
+    color: var(--color-primary);
   }
 
   .submenu li.has-submenu > a {
@@ -98,35 +183,327 @@
   }
 
   .has-submenu > a::after {
-    content: ">";
+    content: "\203A";
     margin-left: auto;
-    padding-left: 8px;
+    padding-left: var(--space-md);
+    font-size: 16px;
+    color: var(--color-text-muted);
   }
 
   .submenu.active {
     display: block;
   }
 
-  .canvas {
-    display:block;
-    background:#f8f8f8;
+  .menu-separator {
+    height: 1px;
+    background: var(--color-border);
+    margin: var(--space-xs) 0;
   }
 
-  dialog {
-    margin-top: 40px;
-    margin-bottom: auto;
-    margin-left: auto;
-    margin-right: auto;
-    max-width: 640px;
+  /* ===== APP LAYOUT ===== */
+  .app-layout {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+  }
 
+  /* ===== LEFT SIDEBAR ===== */
+  .sidebar {
+    width: var(--sidebar-width);
+    flex-shrink: 0;
+    background: var(--color-surface);
+    border-right: 1px solid var(--color-border);
+    overflow-y: auto;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .sidebar-section {
+    padding: var(--space-sm) 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .sidebar-section:last-child {
+    border-bottom: none;
+  }
+
+  .sidebar-heading {
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--color-text-muted);
+    padding: var(--space-sm) var(--space-md);
+    user-select: none;
+  }
+
+  .palette-btn {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    padding: var(--space-xs) var(--space-md);
+    padding-left: var(--space-lg);
+    font-family: var(--font-family);
+    font-size: var(--font-size-sm);
+    color: var(--color-text);
+    cursor: pointer;
+    transition: background 0.1s, border-color 0.1s;
+    border-left: 3px solid transparent;
+    line-height: 1.6;
+  }
+
+  .palette-btn:hover {
+    background: var(--color-bg);
+  }
+
+  .palette-btn.active {
+    background: var(--color-primary-light);
+    border-left-color: var(--color-primary);
+    color: var(--color-primary);
+    font-weight: 500;
+  }
+
+  /* ===== CANVAS AREA ===== */
+  .canvas-container {
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .canvas {
+    display: block;
+    background: var(--color-canvas-bg);
+  }
+
+  /* ===== RIGHT TOOLBAR ===== */
+  .toolbar {
+    width: var(--toolbar-width);
+    flex-shrink: 0;
+    background: var(--color-surface);
+    border-left: 1px solid var(--color-border);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: var(--space-sm) 0;
+    gap: var(--space-xs);
+  }
+
+  .toolbar-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    padding: var(--space-xs) 0;
+  }
+
+  .toolbar-divider {
+    width: 28px;
+    height: 1px;
+    background: var(--color-border);
+    margin: var(--space-xs) 0;
+  }
+
+  .tool-btn {
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    color: var(--color-text-secondary);
+    transition: background 0.1s, color 0.1s;
+    padding: 0;
+  }
+
+  .tool-btn:hover {
+    background: var(--color-bg);
+    color: var(--color-text);
+  }
+
+  .tool-btn.active {
+    background: var(--color-primary-light);
+    color: var(--color-primary);
+  }
+
+  .tool-btn svg {
+    width: 18px;
+    height: 18px;
+    stroke: currentColor;
+    stroke-width: 2;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .toolbar-label {
+    font-size: 9px;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    padding: var(--space-xs) 0;
+    user-select: none;
+  }
+
+  /* ===== STATUS BAR ===== */
+  .statusbar {
+    height: var(--statusbar-height);
+    flex-shrink: 0;
+    background: var(--color-surface);
+    border-top: 1px solid var(--color-border);
+    display: flex;
+    align-items: center;
+    padding: 0 var(--space-lg);
+    gap: var(--space-xl);
+    font-size: var(--font-size-xs);
+    color: var(--color-text-secondary);
+    z-index: 100;
+  }
+
+  .status-mode {
+    font-weight: 500;
+    min-width: 120px;
+  }
+
+  .status-coords {
+    font-family: 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
+    font-size: 11px;
+    color: var(--color-text-muted);
+    min-width: 80px;
+  }
+
+  .status-sim {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+  }
+
+  .status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  .status-dot.active {
+    background: var(--color-success);
+    box-shadow: 0 0 4px var(--color-success);
+  }
+
+  .status-dot.stopped {
+    background: var(--color-text-muted);
+  }
+
+  /* ===== DIALOGS ===== */
+  dialog {
+    margin: auto;
+    max-width: 560px;
+    width: 90%;
     position: fixed;
-    top: 0;
     max-height: calc(100vh - 80px);
     overflow-y: auto;
+    padding: var(--space-xl);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    font-family: var(--font-family);
+  }
 
-    padding: 16px;
-    border-radius: 8px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+  dialog::backdrop {
+    background: rgba(0, 0, 0, 0.4);
+  }
+
+  dialog h1, dialog h2 {
+    margin-top: 0;
+    color: var(--color-text);
+    font-weight: 600;
+  }
+
+  dialog h1 { font-size: 18px; }
+  dialog h2 { font-size: 16px; }
+
+  dialog p {
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+    font-size: var(--font-size-base);
+  }
+
+  dialog a {
+    color: var(--color-primary);
+    text-decoration: none;
+  }
+
+  dialog a:hover {
+    text-decoration: underline;
+  }
+
+  dialog input[type="text"],
+  dialog input[type="file"] {
+    width: 100%;
+    padding: var(--space-sm) var(--space-md);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-family);
+    font-size: var(--font-size-base);
+    color: var(--color-text);
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+
+  dialog input[type="text"]:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+  }
+
+  dialog label, dialog p#messageInput {
+    display: block;
+    font-weight: 500;
+    margin-bottom: var(--space-sm);
+    color: var(--color-text);
+    font-size: var(--font-size-base);
+  }
+
+  .dialog-actions {
+    display: flex;
+    gap: var(--space-sm);
+    margin-top: var(--space-lg);
+    justify-content: flex-end;
+  }
+
+  .btn {
+    padding: var(--space-sm) var(--space-lg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-family);
+    font-size: var(--font-size-base);
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+    background: var(--color-surface);
+    color: var(--color-text);
+  }
+
+  .btn:hover {
+    background: var(--color-bg);
+  }
+
+  .btn-primary {
+    background: var(--color-primary);
+    color: white;
+    border-color: var(--color-primary);
+  }
+
+  .btn-primary:hover {
+    background: var(--color-primary-hover);
+    border-color: var(--color-primary-hover);
   }
 
   ul {
@@ -139,9 +516,15 @@
   }
 
   th, td {
-    padding: 4px;
+    padding: var(--space-xs) var(--space-sm);
     vertical-align: top;
-    border: 1px solid #000;
+    border: 1px solid var(--color-border);
+    font-size: var(--font-size-sm);
+  }
+
+  th {
+    background: var(--color-bg);
+    font-weight: 600;
   }
 
   </style>
@@ -149,26 +532,16 @@
 
 <body>
 
+  <!-- ===== MENU BAR ===== -->
   <nav class="menu">
+    <div class="menu-brand"><span>Pneumatic</span> Simulator</div>
     <ul class="menu-principal">
 
       <li class="menu-item">
         <div class="menu-titulo" data-i18n="fileMenu">File</div>
         <ul class="submenu">
-
-          <li><a href="#" data-action="fSwap"   data-i18n="fSwap">Swap Screen</a></li>
-
-          <li class="has-submenu">
-            <a href="#" data-i18n="languageMenu">Language</a>
-            <ul class="submenu">
-              <li><a href="#" data-action="enLang" data-i18n="enLang">English</a></li>
-              <li><a href="#" data-action="esLang" data-i18n="esLang">Spanish</a></li>
-            </ul>
-          </li>
-
           <li><a href="#" data-action="fNew"   data-i18n="fNew">New Schematic</a></li>
           <li><a href="#" data-action="fOpen"  data-i18n="fOpen">Open Schematic</a></li>
-
           <li class="has-submenu">
             <a href="#" data-i18n="fSave">Save Schematic</a>
             <ul class="submenu">
@@ -176,63 +549,16 @@
               <li><a href="#" data-action="fSaveTeacher" data-i18n="fSaveTeacher">Teacher</a></li>
             </ul>
           </li>
-
           <li><a href="#" data-action="fSavePNG" data-i18n="fSavePNG">Save Image</a></li>
           <li><a href="#" data-action="fCompare" data-i18n="fCompare">Compare Files</a></li>
-
-          <li><a href="#" data-action="fAbout" data-i18n="fAbout">About...</a></li>
-        </ul>
-      </li>
-
-      <li class="menu-item">
-        <div class="menu-titulo" data-i18n="drawMenu">Draw</div>
-        <ul class="submenu">
-
-          <li class="has-submenu">
-            <a href="#" data-i18n="valvesMenu">Valves</a>
-            <ul class="submenu">
-              <li><a href="#" data-action="cValve22m" data-i18n="cValve22m">Valve 2/2 manual</a></li>
-              <li><a href="#" data-action="cValve32b" data-i18n="cValve32b">Valve 3/2 button</a></li>
-              <li><a href="#" data-action="cValve32m" data-i18n="cValve32m">Valve 3/2 manual</a></li>
-              <li><a href="#" data-action="cValve32r" data-i18n="cValve32r">Valve 3/2 with roller</a></li>
-              <li><a href="#" data-action="cRoller"   data-i18n="cRoller">Roller of valve</a></li>
-              <li><a href="#" data-action="cValve32p" data-i18n="cValve32p">Valve 3/2 pneu. pilot</a></li>
-              <li><a href="#" data-action="cValve52m" data-i18n="cValve52m">Valve 5/2 manual</a></li>
-              <li><a href="#" data-action="cValve52p" data-i18n="cValve52p">Valve 5/2 pneu. pilot</a></li>
-            </ul>
-          </li>
-
-          <li class="has-submenu">
-            <a href="#" data-i18n="auxValvesMenu">Aux. valves</a>
-            <ul class="submenu">
-              <li><a href="#" data-action="cValveNret" data-i18n="cValveNret">Non-return valve</a></li>
-              <li><a href="#" data-action="cValveFlow" data-i18n="cValveFlow">Choke valve</a></li>
-              <li><a href="#" data-action="cValveOr"   data-i18n="cValveOr">Or valve</a></li>
-              <li><a href="#" data-action="cValveAnd"  data-i18n="cValveAnd">And valve</a></li>
-            </ul>
-          </li>
-
-          <li class="has-submenu">
-            <a href="#" data-i18n="cylinderMenu">Cylinder</a>
-            <ul class="submenu">
-              <li><a href="#" data-action="cCylinder1" data-i18n="cCylinder1">Single-acting</a></li>
-              <li><a href="#" data-action="cCylinder2" data-i18n="cCylinder2">Double-acting</a></li>
-            </ul>
-          </li>
-
-          <li><a href="#" data-action="cPipe"   data-i18n="cPipe">Pipe</a></li>
-          <li><a href="#" data-action="cPress"  data-i18n="cPress">Compressor</a></li>
-          <li><a href="#" data-action="cEscape" data-i18n="cEscape">Escape</a></li>
-          <li><a href="#" data-action="cText"   data-i18n="cText">Text</a></li>
-          <li><a href="#" data-action="cManometer"  data-i18n="cManometer">Manometer</a></li>
-
+          <li class="menu-separator"></li>
+          <li><a href="#" data-action="fSwap" data-i18n="fSwap">Fullscreen</a></li>
         </ul>
       </li>
 
       <li class="menu-item">
         <div class="menu-titulo" data-i18n="examplesMenu">Examples</div>
         <ul class="submenu">
-
           <li class="has-submenu">
             <a href="#" data-i18n="singleMenu">Single</a>
             <ul class="submenu">
@@ -244,7 +570,6 @@
               <li><a href="./index.html?loadFile=single-32-x2.txt" target="_blank" data-i18n="eSingle06">Valve 3/2 x2</a></li>
             </ul>
           </li>
-
           <li class="has-submenu">
             <a href="#" data-i18n="doubleMenu">Double</a>
             <ul class="submenu">
@@ -254,7 +579,6 @@
               <li><a href="./index.html?loadFile=double-52-auto.txt"    target="_blank" data-i18n="eDouble04">Valve 5/2 + Roller + Flow</a></li>
             </ul>
           </li>
-
           <li class="has-submenu">
             <a href="#" data-i18n="multipleMenu">Multiple</a>
             <ul class="submenu">
@@ -262,68 +586,148 @@
               <li><a href="./index.html?loadFile=multi-abba.txt"  target="_blank" data-i18n="eMulti02">A+ B+ B- A-</a></li>
             </ul>
           </li>
-
         </ul>
       </li>
 
       <li class="menu-item">
-        <div class="menu-titulo" data-i18n="editMenu">Edit</div>
+        <div class="menu-titulo" data-i18n="helpMenu">Help</div>
         <ul class="submenu">
-          <li><a href="#" data-action="eDelete" data-i18n="eDelete">Delete</a></li>
-          <li><a href="#" data-action="eMove"   data-i18n="eMove">Move</a></li>
-          <li><a href="#" data-action="eOptions" data-i18n="eOptions">Options</a></li>
-          <li><a href="#" data-action="eFlip" data-i18n="eFlip">Flip</a></li>
-        </ul>
-      </li>
-
-      <li class="menu-item">
-        <div class="menu-titulo" data-i18n="simulateMenu">Simulate</div>
-        <ul class="submenu">
-          <li><a href="#" data-action="sInit"     data-i18n="sInit">Init</a></li>
-          <li><a href="#" data-action="sStep"     data-i18n="sStep">Step 's'</a></li>
-          <li><a href="#" data-action="sStop"     data-i18n="sStop">Stop</a></li>
-          <li><a href="#" data-action="sContinue" data-i18n="sContinue">Continue</a></li>
-          <li><a href="#" data-action="sReset" data-i18n="sReset">Reset</a></li>
+          <li class="has-submenu">
+            <a href="#" data-i18n="languageMenu">Language</a>
+            <ul class="submenu">
+              <li><a href="#" data-action="enLang" data-i18n="enLang">English</a></li>
+              <li><a href="#" data-action="esLang" data-i18n="esLang">Spanish</a></li>
+            </ul>
+          </li>
+          <li><a href="#" data-action="fAbout" data-i18n="fAbout">About...</a></li>
         </ul>
       </li>
 
     </ul>
   </nav>
 
-  <canvas id="canvas" class="canvas"></canvas>
+  <!-- ===== APP LAYOUT ===== -->
+  <div class="app-layout">
 
+    <!-- Left Sidebar: Component Palette -->
+    <aside class="sidebar" id="componentPalette">
+      <div class="sidebar-section">
+        <div class="sidebar-heading" data-i18n="valvesMenu">Valves</div>
+        <button class="palette-btn" data-action="cValve22m" data-i18n="cValve22m">Valve 2/2 manual</button>
+        <button class="palette-btn" data-action="cValve32b" data-i18n="cValve32b">Valve 3/2 button</button>
+        <button class="palette-btn" data-action="cValve32m" data-i18n="cValve32m">Valve 3/2 manual</button>
+        <button class="palette-btn" data-action="cValve32r" data-i18n="cValve32r">Valve 3/2 with roller</button>
+        <button class="palette-btn" data-action="cRoller"   data-i18n="cRoller">Roller of valve</button>
+        <button class="palette-btn" data-action="cValve32p" data-i18n="cValve32p">Valve 3/2 pneu. pilot</button>
+        <button class="palette-btn" data-action="cValve52m" data-i18n="cValve52m">Valve 5/2 manual</button>
+        <button class="palette-btn" data-action="cValve52p" data-i18n="cValve52p">Valve 5/2 pneu. pilot</button>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-heading" data-i18n="auxValvesMenu">Aux. Valves</div>
+        <button class="palette-btn" data-action="cValveNret" data-i18n="cValveNret">Non-return valve</button>
+        <button class="palette-btn" data-action="cValveFlow" data-i18n="cValveFlow">Choke valve</button>
+        <button class="palette-btn" data-action="cValveOr"   data-i18n="cValveOr">OR valve</button>
+        <button class="palette-btn" data-action="cValveAnd"  data-i18n="cValveAnd">AND valve</button>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-heading" data-i18n="cylinderMenu">Cylinders</div>
+        <button class="palette-btn" data-action="cCylinder1" data-i18n="cCylinder1">Single-acting</button>
+        <button class="palette-btn" data-action="cCylinder2" data-i18n="cCylinder2">Double-acting</button>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-heading" data-i18n="otherMenu">Other</div>
+        <button class="palette-btn" data-action="cPipe"      data-i18n="cPipe">Pipe</button>
+        <button class="palette-btn" data-action="cPress"     data-i18n="cPress">Compressor</button>
+        <button class="palette-btn" data-action="cEscape"    data-i18n="cEscape">Escape</button>
+        <button class="palette-btn" data-action="cText"      data-i18n="cText">Text</button>
+        <button class="palette-btn" data-action="cManometer" data-i18n="cManometer">Manometer</button>
+      </div>
+    </aside>
+
+    <!-- Canvas Area -->
+    <div class="canvas-container">
+      <canvas id="canvas" class="canvas"></canvas>
+    </div>
+
+    <!-- Right Toolbar: Edit & Simulation -->
+    <aside class="toolbar" id="toolBar">
+      <div class="toolbar-group">
+        <button class="tool-btn" data-action="eDelete" title="Delete" data-i18n-title="eDelete">
+          <svg viewBox="0 0 18 18"><polyline points="3 5 15 5"/><path d="M5 5V3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2"/><path d="M4 5l1 11a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1l1-11"/><line x1="7.5" y1="8" x2="7.5" y2="13"/><line x1="10.5" y1="8" x2="10.5" y2="13"/></svg>
+        </button>
+        <button class="tool-btn" data-action="eMove" title="Move" data-i18n-title="eMove">
+          <svg viewBox="0 0 18 18"><path d="M9 2v14M2 9h14M9 2l-2 2M9 2l2 2M9 16l-2-2M9 16l2-2M2 9l2-2M2 9l2 2M16 9l-2-2M16 9l-2 2"/></svg>
+        </button>
+        <button class="tool-btn" data-action="eOptions" title="Options" data-i18n-title="eOptions">
+          <svg viewBox="0 0 18 18"><circle cx="9" cy="9" r="2.5"/><path d="M9 1.5v2M9 14.5v2M1.5 9h2M14.5 9h2M3.7 3.7l1.4 1.4M12.9 12.9l1.4 1.4M3.7 14.3l1.4-1.4M12.9 5.1l1.4-1.4"/></svg>
+        </button>
+        <button class="tool-btn" data-action="eFlip" title="Flip" data-i18n-title="eFlip">
+          <svg viewBox="0 0 18 18"><path d="M3 4h4l-4 5h4"/><path d="M15 14h-4l4-5h-4"/><line x1="9" y1="1" x2="9" y2="17" stroke-dasharray="2 2"/></svg>
+        </button>
+      </div>
+      <div class="toolbar-divider"></div>
+      <div class="toolbar-group">
+        <button class="tool-btn" data-action="sInit" title="Init Simulation" data-i18n-title="sInit">
+          <svg viewBox="0 0 18 18"><polygon points="5,3 15,9 5,15"/></svg>
+        </button>
+        <button class="tool-btn" data-action="sStep" title="Step (S)" data-i18n-title="sStep">
+          <svg viewBox="0 0 18 18"><polygon points="4,3 11,9 4,15"/><line x1="13" y1="3" x2="13" y2="15"/></svg>
+        </button>
+        <button class="tool-btn" data-action="sStop" title="Stop" data-i18n-title="sStop">
+          <svg viewBox="0 0 18 18"><rect x="3" y="3" width="4" height="12" rx="0.5"/><rect x="11" y="3" width="4" height="12" rx="0.5"/></svg>
+        </button>
+        <button class="tool-btn" data-action="sContinue" title="Continue" data-i18n-title="sContinue">
+          <svg viewBox="0 0 18 18"><polygon points="2,3 9,9 2,15"/><polygon points="9,3 16,9 9,15"/></svg>
+        </button>
+        <button class="tool-btn" data-action="sReset" title="Reset" data-i18n-title="sReset">
+          <svg viewBox="0 0 18 18"><rect x="4" y="4" width="10" height="10" rx="1"/></svg>
+        </button>
+      </div>
+    </aside>
+
+  </div>
+
+  <!-- ===== STATUS BAR ===== -->
+  <footer class="statusbar" id="statusBar">
+    <span class="status-mode" id="statusMode" data-i18n-dynamic="statusReady">Ready</span>
+    <span class="status-coords" id="statusCoords">0, 0</span>
+    <span class="status-sim" id="statusSim">
+      <span class="status-dot stopped" id="statusDot"></span>
+      <span id="statusSimText"></span>
+    </span>
+  </footer>
+
+  <!-- ===== DIALOGS ===== -->
   <dialog id="textPrompt">
     <form method="dialog">
       <p id="messageInput">Text:</p>
       <input type="text" name="answer" id="textInput" placeholder="Text...">
-      <div style="margin-top: 16px;">
-        <button id="confirmBtn" value="default">Accept</button>
-        <button id="cancelBtn" value="cancel" formnovalidate>Cancel</button>
+      <div class="dialog-actions">
+        <button class="btn" id="cancelBtn" value="cancel" formnovalidate>Cancel</button>
+        <button class="btn btn-primary" id="confirmBtn" value="default">Accept</button>
       </div>
     </form>
   </dialog>
 
-
   <dialog id="compareWindow">
-    <h1 data-i18n="compareWindowTitle">Pneumatic Schematic Comparison Tool</h1>
+    <h2 data-i18n="compareWindowTitle">Pneumatic Schematic Comparison Tool</h2>
     <input type="file" id="compareFileInput" multiple>
     <div id="compareResults"></div>
-    <div style="margin-top: 16px;">
-       <button onclick="compareWindowReport()" id="compareBtn" data-i18n="compareBtn">Compare Schematics</button>
-       <button onclick="compareWindowClose()" id="compareCloseBtn" data-i18n="compareCloseBtn">Close Window</button>
+    <div class="dialog-actions">
+       <button class="btn" onclick="compareWindowClose()" id="compareCloseBtn" data-i18n="compareCloseBtn">Close</button>
+       <button class="btn btn-primary" onclick="compareWindowReport()" id="compareBtn" data-i18n="compareBtn">Compare</button>
     </div>
   </dialog>
-
 
   <dialog id="aboutWindow">
     <div>
     <h2>Picuino Pneumatic Simulator</h2>
-    <p><strong>Copyright © 2025 Carlos Félix Pardo Martín.</strong></p>
+    <p><strong>Copyright &copy; 2025 Carlos F&eacute;lix Pardo Mart&iacute;n.</strong></p>
     <p><strong>Email:</strong> <span style="unicode-bidi:bidi-override; direction: rtl;">moc.oniu<span style="display:none">n</span>cip&#64;sol<span style="display:none">novale</span>rac<span></p>
     <p><strong>Original:</strong> <a href="https://www.picuino.com/neumatic/index.html" target="_blank">Pneumatic simulator original web page</a>.</p>
     <p><strong>Tutorial:</strong>
       <a href="https://www.picuino.com/en/mecan-neumatic-index.html" target="_blank">Pneumatics tutorial (en)</a>.
-      <a href="https://www.picuino.com/es/mecan-neumatic-index.html" target="_blank">Tutorial de neumática (es)</a>.</p>
+      <a href="https://www.picuino.com/es/mecan-neumatic-index.html" target="_blank">Tutorial de neum&aacute;tica (es)</a>.</p>
     <p><strong>GitHub:</strong> <a href="https://github.com/picuino/neumatic/" target="_blank">Pneumatic Simulator source code</a>.</p>
     <p>
     This program is free software: you can redistribute it and/or modify
@@ -340,7 +744,9 @@
     along with this program. If not, see
     <a href="https://www.gnu.org/licenses/gpl-3.0.html" target="_blank">
     www.gnu.org/licenses/gpl-3.0.html</a>.</p>
-    <button id="aboutCloseBtn" data-i18n="aboutCloseBtn">Close Window</button>
+    <div class="dialog-actions">
+      <button class="btn btn-primary" id="aboutCloseBtn" data-i18n="aboutCloseBtn">Close</button>
+    </div>
     </div>
   </dialog>
 
@@ -412,7 +818,7 @@ const translations = {
     compareWindowTitle: 'Pneumatic Schematic Comparison Tool',
     compareBtn: 'Compare Files',
     fileMenu: 'File',
-    fSwap: 'Swap Screen',
+    fSwap: 'Fullscreen',
     fNew: 'New Schematic',
     fOpen: 'Open Schematic',
     fSave: 'Save Schematic',
@@ -459,6 +865,15 @@ const translations = {
     sStop: 'Stop',
     sContinue: 'Continue',
     sReset: 'Reset',
+    helpMenu: 'Help',
+    languageMenu: 'Language',
+    otherMenu: 'Other',
+    statusReady: 'Ready',
+    statusDeleting: 'Delete mode',
+    statusMoving: 'Move mode',
+    statusOptions: 'Options mode',
+    statusFlip: 'Flip mode',
+    statusSimulating: 'Simulating',
   },
 
   es: {
@@ -468,7 +883,7 @@ const translations = {
     compareWindowTitle: 'Comparador de Esquemas Neumáticos',
     compareBtn: 'Comparar Archivos',
     fileMenu: 'Archivo',
-    fSwap: 'Cambiar pantalla',
+    fSwap: 'Pantalla completa',
     fNew: 'Nuevo Esquema',
     fOpen: 'Abrir Esquema',
     fSave: 'Guardar Esquema',
@@ -515,6 +930,15 @@ const translations = {
     sStop: 'Detener',
     sContinue: 'Continuar',
     sReset: 'Reiniciar',
+    helpMenu: 'Ayuda',
+    languageMenu: 'Idioma',
+    otherMenu: 'Otros',
+    statusReady: 'Listo',
+    statusDeleting: 'Modo borrar',
+    statusMoving: 'Modo mover',
+    statusOptions: 'Modo opciones',
+    statusFlip: 'Modo voltear',
+    statusSimulating: 'Simulando',
   }
 }
 
@@ -546,10 +970,13 @@ document.addEventListener("click", (e) => {
 });
 
 
-/* menu actions */
+/* menu actions — supports both <a> and <button> with data-action */
 document.addEventListener("click", (e) => {
-  const item = e.target.closest("a[data-action]");
+  const item = e.target.closest("[data-action]");
   if (!item) return;
+
+  // Prevent default for anchor tags
+  if (item.tagName === 'A') e.preventDefault();
 
   const action = item.dataset.action;
 
@@ -598,12 +1025,93 @@ document.addEventListener("click", (e) => {
   };
 
   actions[action]?.();
+  updateUI();
 
   // Close submenus after action
   document.querySelectorAll(".submenu").forEach(sm =>
     sm.classList.remove("active")
   );
 });
+
+
+/* Update UI state: active buttons, status bar */
+function updateUI() {
+  // Update active state on palette buttons
+  document.querySelectorAll('.palette-btn').forEach(btn => {
+    btn.classList.remove('active');
+    if (drawMode === 'component') {
+      const action = btn.dataset.action;
+      // Map action name to componentType
+      const actionToType = {
+        cPipe: 'Pipe', cPress: 'Compressor', cManometer: 'Manometer',
+        cEscape: 'Escape', cText: 'Text', cValve22m: 'Valve22m',
+        cValve32b: 'Valve32b', cValve32m: 'Valve32m', cValve32r: 'Valve32r',
+        cRoller: 'Roller', cValve32p: 'Valve32p', cValve52m: 'Valve52m',
+        cValve52p: 'Valve52p', cValveOr: 'ValveOr', cValveAnd: 'ValveAnd',
+        cValveNret: 'ValveNret', cValveFlow: 'ValveFlow',
+        cCylinder1: 'Cylinder1', cCylinder2: 'Cylinder2',
+      };
+      if (actionToType[action] === componentType) {
+        btn.classList.add('active');
+      }
+    }
+  });
+
+  // Update active state on toolbar buttons
+  document.querySelectorAll('.tool-btn').forEach(btn => {
+    btn.classList.remove('active');
+    const action = btn.dataset.action;
+    if (action === 'eDelete' && drawMode === 'Delete') btn.classList.add('active');
+    if (action === 'eMove' && drawMode === 'Move') btn.classList.add('active');
+    if (action === 'eOptions' && drawMode === 'Options') btn.classList.add('active');
+    if (action === 'eFlip' && drawMode === 'Flip') btn.classList.add('active');
+  });
+
+  // Update status bar mode
+  const statusMode = document.getElementById('statusMode');
+  if (statusMode) {
+    if (drawMode === 'component' && componentType) {
+      // Find the palette button text for this component
+      const btn = document.querySelector(`.palette-btn.active`);
+      const name = btn ? btn.textContent : componentType;
+      statusMode.textContent = 'Draw: ' + name;
+    } else if (drawMode === 'Delete') {
+      statusMode.textContent = translations[globalLang]?.statusDeleting || 'Delete mode';
+    } else if (drawMode === 'Move') {
+      statusMode.textContent = translations[globalLang]?.statusMoving || 'Move mode';
+    } else if (drawMode === 'Options') {
+      statusMode.textContent = translations[globalLang]?.statusOptions || 'Options mode';
+    } else if (drawMode === 'Flip') {
+      statusMode.textContent = translations[globalLang]?.statusFlip || 'Flip mode';
+    } else {
+      statusMode.textContent = translations[globalLang]?.statusReady || 'Ready';
+    }
+  }
+
+  // Update simulation status
+  updateSimStatus();
+}
+
+function updateSimStatus() {
+  const statusDot = document.getElementById('statusDot');
+  const statusSimText = document.getElementById('statusSimText');
+  if (statusDot && statusSimText) {
+    if (simulationActive) {
+      statusDot.className = 'status-dot active';
+      statusSimText.textContent = translations[globalLang]?.statusSimulating || 'Simulating';
+    } else {
+      statusDot.className = 'status-dot stopped';
+      statusSimText.textContent = '';
+    }
+  }
+}
+
+function updateStatusCoords(position) {
+  const statusCoords = document.getElementById('statusCoords');
+  if (statusCoords && position) {
+    statusCoords.textContent = Math.round(position.x) + ', ' + Math.round(position.y);
+  }
+}
 
 
 /*************************************************************************/
@@ -3243,33 +3751,8 @@ class Renderer{
     ctx.fillStyle = '#fff';
     ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
-    ctx.textAlign = "start";
-    ctx.font = textFont;
-    ctx.fillStyle = '#aaa';
-    ctx.fillText('Picuino Pneumatic Simulator v' + programVersion, 8, 18);
-    this.drawPosition(mousePosition);
-
     for (const comp of this.engine.components) {
       comp.draw(ctx);
-    }
-  }
-
-  drawPosition(position) {
-    const ctx = this.ctx;
-    if (this.engine.haveTeacherComp()) {
-      ctx.fillStyle = '#fff';
-    }
-    else {
-      ctx.fillStyle = '#afa';
-    }
-    ctx.fillRect(this.canvas.width*0.5-76, 5, 76, 18);
-    if (position !== null) {
-      ctx.textAlign = 'center';
-      ctx.font = textFont;
-      ctx.fillStyle = '#aaa';
-      ctx.fillText(Math.round(position.x) + ',' + Math.round(position.y),
-                   this.canvas.width*0.5-38, 18);
-      ctx.textAlign = 'left';
     }
   }
 }
@@ -3316,17 +3799,21 @@ class UIController {
     editPipe = null;
     pipeMove = null;
     initPos = null;
+    updateUI();
   }
 
   _resizeCanvas(e) {
     const canvas = this.canvas;
     const ctx = canvas.getContext('2d');
-    const width = window.innerWidth*canvasScale;
-    const height = (window.innerHeight - 35)*canvasScale ;
+    const container = document.querySelector('.canvas-container');
+    const cw = container ? container.clientWidth : window.innerWidth;
+    const ch = container ? container.clientHeight : window.innerHeight;
+    const width = cw * canvasScale;
+    const height = ch * canvasScale;
     canvas.width  = (width < minCanvasWidth) ? minCanvasWidth : width;
     canvas.height = (height < minCanvasHeight) ? minCanvasHeight : height;
-    canvas.style.width = this.canvas.width/canvasScale + 'px';
-    canvas.style.height  = this.canvas.height/canvasScale + 'px';
+    canvas.style.width = canvas.width / canvasScale + 'px';
+    canvas.style.height = canvas.height / canvasScale + 'px';
     ctx.scale(canvasScale, canvasScale);
     this.renderer.draw();
   }
@@ -3335,6 +3822,7 @@ class UIController {
     const r = this.canvas.getBoundingClientRect();
     const position = {x:e.clientX - r.left, y:e.clientY - r.top};
     mousePosition = position;
+    updateStatusCoords(position);
     return position;
   }
 
@@ -3511,7 +3999,7 @@ class UIController {
       }
       this.renderer.draw();
     }
-    this.renderer.drawPosition(position);
+    updateStatusCoords(position);
   }
 
   _onMove(e){
@@ -3536,7 +4024,7 @@ class UIController {
       }
       this.renderer.draw();
     }
-    this.renderer.drawPosition(position);
+    updateStatusCoords(position);
   }
 
   _onUp(e){
@@ -3912,6 +4400,7 @@ function simulationInit() {
   engine.createNodes();
   animationID = requestAnimationFrame(simulationRender);
   simulationActive = true;
+  updateUI();
 }
 
 function simulationStep() {
@@ -3924,6 +4413,7 @@ function simulationStep() {
   if (animationID === null) {
     animationID = requestAnimationFrame(simulationRender);
   }
+  updateUI();
 }
 
 function simulationStop() {
@@ -3933,6 +4423,7 @@ function simulationStop() {
     cancelAnimationFrame(animationID);
     animationID = null;
   }
+  updateUI();
 }
 
 function simulationContinue() {
@@ -3941,6 +4432,7 @@ function simulationContinue() {
   if (animationID === null) {
     animationID = requestAnimationFrame(simulationRender);
   }
+  updateUI();
 }
 
 function simulationReset() {
@@ -3950,6 +4442,7 @@ function simulationReset() {
   }
   engine.createNodes();
   renderer.draw();
+  updateUI();
 }
 
 
